@@ -8,7 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>AdminLTE 3 | Starter</title>
+        <title>Blog</title>
         <!-- Font Awesome Icons -->
         <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
         <!-- Theme style -->
@@ -99,7 +99,51 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="content">
                     <div class="container-fluid">
                         <div class="row">
-
+                            <!-- place_content -->
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Bordered Table</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <a href="#" class="btn btn-success mb-3">New Blog Post</a>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 10px">#</th>
+                                                    <th>Title</th>
+                                                    <th>Content</th>
+                                                    <th style="width: 40px">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1.</td>
+                                                    <td>Lorem ipsum</td>
+                                                    <td>
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, fugiat quidem vel voluptates pariatur odit cupiditate unde natus enim officiis ex eligendi iste facere eaque? At quae blanditiis eligendi molestias.
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                                        <a href="#" class="btn btn-sm btn-danger">Del</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer clearfix">
+                                        <ul class="pagination pagination-sm m-0 float-right">
+                                            <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.row -->
                     </div><!-- /.container-fluid -->
