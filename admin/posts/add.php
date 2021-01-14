@@ -19,7 +19,6 @@
             } else {
                 move_uploaded_file($_FILES['image']['tmp_name'], $file);
 
-                // The query will run if uploaded file exists
                 $stmt = $pdo->prepare('
                     INSERT INTO posts(title, content, image, author_id)
                     VALUES (:title, :content, :image, :author_id)
@@ -32,11 +31,26 @@
                 $result = $stmt->execute();
 
                 if ($result) {
-                    echo "<script>alert('Successfully added.')</script>";
+                    echo "<script>alert('Successfully Added'); window.location.href='../index.php';</script>";
                 }
             }
         }
-    }
+        else {
+            $stmt = $pdo->prepare('
+                INSERT INTO posts(title, content, author_id)
+                VALUES (:title, :content, :author_id)
+            ');
+
+            $stmt->bindValue(':title', $_POST['title']);
+            $stmt->bindValue(':content', $_POST['content']);
+            $stmt->bindValue(':author_id', $_SESSION['user_id']);
+            $result = $stmt->execute();
+
+            if ($result) {
+                echo "<script>alert('Successfully Added'); window.location.href='../index.php';</script>";
+            }
+        }
+    } 
 ?>
 
 <?php include '../../partials/header.php'; ?>
@@ -50,7 +64,7 @@
                         <div class="card-header">
                             <h3 class="card-title">Add New Blog Post</h3>
                         </div>
-                        <form role="form" action="add.php" method="POST" enctype="multipart/form-data">
+                        <form role="form" action="" method="POST" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="title">Title</label>

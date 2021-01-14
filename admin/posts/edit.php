@@ -49,7 +49,6 @@
                 echo "<script>alert('Successfully Updated'); window.location.href='../index.php';</script>";
             }
         }
-
     } else {
         $id = $_GET['id'];
 
@@ -111,7 +110,7 @@
                             <!-- /.card-body -->
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Update</button>
-                                <a href="index.php" class="btn btn-secondary">Back</a>
+                                <a href="../index.php" class="btn btn-secondary">Back</a>
                             </div>
                         </form>
                     </div>
