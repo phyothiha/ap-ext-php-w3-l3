@@ -1,26 +1,28 @@
 <?php  
     session_start();
-    require '../config.php';
+    require '../../config.php';
 
-    if ( empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) ) {
-        header('Location: login.php');
+    if ( (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) || $_SESSION['role'] != 1 ) {
+        header('Location: /admin/login.php');
     }
-
-    /** PAGINATION NEED TO REMODIFIED WITH SEARCH */
 
     // pagination start
     if (isset($_GET['page'])) {
         $page = $_GET['page'];
     } else {
         $page = 1;
+        unset($_COOKIE['search']);
+        setcookie('search', null, 0, "/admin");
     }
 
-    $per_page = 5;
+    $per_page = 10;
     $offset = ($page - 1) * $per_page;
     // pagination end
    
-    if (isset($_POST['search'])) {
-        $search_query = $_POST['search'];
+    if (isset($_POST['search']) || isset($_COOKIE['search'])) {
+        $search_query = $_POST['search'] ?? $_COOKIE['search'];
+
+        setcookie('search', $search_query, 0, "/admin");
 
         // count query start
         $stmt = $pdo->prepare("
@@ -63,7 +65,7 @@
     }
 ?>
 
-<?php include '../partials/header.php'; ?>
+<?php include '../../partials/header.php'; ?>
 
     <div class="content">
         <div class="container-fluid">
@@ -72,11 +74,11 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Blog Listing</h3>
+                            <h3 class="card-title">Posts Listing</h3>
                         </div>
                         
                         <div class="card-body">
-                            <a href="posts/add.php" class="btn btn-success mb-3">New Blog Post</a>
+                            <a href="add.php" class="btn btn-success mb-3">New Blog Post</a>
 
                             <table class="table table-bordered">
                                 <thead>
@@ -92,19 +94,19 @@
 
                                 <?php if ($posts) : foreach ($posts as $index => $post) : ?>
                                     <tr>
-                                        <td><?php echo ++$index; ?></td>
+                                        <td><?php echo $index + 1 + $offset; ?></td>
                                         <td><?php echo $post->title; ?></td>
                                         <td>
                                             <?php echo substr($post->content, 0, 50); ?>
                                         </td>
                                         <td>
-                                            <img src="../images/<?php echo $post->image; ?>" alt="No Featured Image" width="150">
+                                            <img src="../../images/<?php echo $post->image; ?>" alt="No Featured Image" width="150">
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="../blogdetail.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-primary mr-2"><i class="fa fa-eye"></i></a>
-                                                <a href="posts/edit.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-info mr-2"><i class="fa fa-edit"></i></a>
-                                                <a onclick="return confirm('Are you sure you want to delete this item');" href="posts/delete.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
+                                                <a href="../../blogdetail.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-primary mr-2"><i class="fa fa-eye"></i></a>
+                                                <a href="edit.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-info mr-2"><i class="fa fa-edit"></i></a>
+                                                <a onclick="return confirm('Are you sure you want to delete this item');" href="delete.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
                                             </div>
                                         </td>
                                     </tr>
@@ -155,4 +157,4 @@
         </div>
     </div>
 
-<?php include '../partials/footer.php'; ?>
+<?php include '../../partials/footer.php'; ?>

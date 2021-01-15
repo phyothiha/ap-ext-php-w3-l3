@@ -7,7 +7,7 @@
                     Extensive PHP Class 
                 </div>
                 <!-- Default to the left -->
-                <strong>Copyright &copy; 2020 <a href="#">Blog App</a>.</strong> All rights reserved.
+                <strong>Copyright &copy; 2020 <a href="/index.php">Blog App</a>.</strong> All rights reserved.
             </footer>
         </div>
         <!-- ./wrapper -->

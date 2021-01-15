@@ -6,6 +6,7 @@
         $name = $_POST['name'];
         $email = $_POST['email'];
         $password = $_POST['password'];
+        $role = 0;
 
         $check_user_stmt = $pdo->prepare("
             SELECT * FROM `users` WHERE `email` = ?
@@ -17,10 +18,10 @@
             echo "<script>alert('Email is already exists.');</script>";
         } else {
             $stmt = $pdo->prepare("
-                INSERT INTO `users`(`name`, `email`, `password`)
-                VALUES (?, ?, ?)
+                INSERT INTO `users`(`name`, `email`, `password`, `role`)
+                VALUES (?, ?, ?, ?)
             ");
-            $result = $stmt->execute([$name, $email, $password]);
+            $result = $stmt->execute([$name, $email, $password, $role]);
 
             if ($result) {
                 echo "<script>alert('Successfully Register. You can now login.'); window.location.href='login.php';</script>";

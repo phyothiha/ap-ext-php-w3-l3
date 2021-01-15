@@ -3,20 +3,21 @@
     require 'config.php'; 
 
     if ($_POST) {
-        // request values
         $email = $_POST['email'];
         $password = $_POST['password'];
+        $role = 0;
 
         $stmt = $pdo->prepare("
-            SELECT * FROM `users` WHERE `email` = ? AND `password` = ?
+            SELECT * FROM `users` WHERE `email` = ? AND `password` = ? AND role = ?
         ");
-        $stmt->execute([$email, $password]);
+        $stmt->execute([$email, $password, $role]);
         $user = $stmt->fetch();
 
         if ($user) {
             $_SESSION['user_id'] = $user->id;
             $_SESSION['username'] = $user->name;
             $_SESSION['logged_in'] = time();
+            $_SESSION['role'] = $role;
 
             header('Location: index.php');
         } else {

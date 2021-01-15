@@ -2,8 +2,8 @@
     session_start();
     require '../../config.php';
 
-    if ( empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) ) {
-        header('Location: login.php');
+    if ( (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) || $_SESSION['role'] != 1 ) {
+        header('Location: /admin/login.php');
     }
 
     if ($_POST) {
@@ -86,7 +86,7 @@
                             <!-- /.card-body -->
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
-                                <a href="../index.php" class="btn btn-secondary">Back</a>
+                                <a href="index.php" class="btn btn-secondary">Back</a>
                             </div>
                         </form>
                     </div>

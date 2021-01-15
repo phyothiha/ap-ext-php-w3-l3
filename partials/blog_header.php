@@ -16,12 +16,21 @@
     </head>
     <body class="hold-transition sidebar-mini">
         <div class="wrapper">
-            <nav class="main-header navbar navbar-expand">                
+            <nav class="main-header navbar navbar-expand ml-0">                
                 <div class="container">
                     <!-- Right navbar links -->
+                    <?php if ( $_SESSION['role'] == 1 ): ?>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a href="admin/posts/index.php">
+                                Dashboard 
+                            </a>
+                      </li>
+                    </ul>
+                    <?php endif; ?>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="btn btn-danger" href="admin/logout.php" role="button">
+                            <a class="btn btn-danger" href="logout.php" role="button">
                                 Logout <i class="fas fa-sign-out-alt ml-1"></i>
                             </a>
                       </li>

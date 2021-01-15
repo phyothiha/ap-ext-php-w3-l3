@@ -7,8 +7,8 @@
     }
 
     $stmt = $pdo->prepare("
-        DELETE FROM posts WHERE id = ?
+        DELETE FROM users WHERE id = ?
     ");
     $stmt->execute([$_GET['id']]);
 
-    header('Location: ../index.php');
+    header('Location: /admin/users/index.php');
