@@ -1,13 +1,14 @@
 <?php 
     session_start();
-    require '../config.php'; 
+    require 'config.php'; 
 
     if ($_POST) {
+        // request values
         $email = $_POST['email'];
         $password = $_POST['password'];
 
         $stmt = $pdo->prepare("
-            SELECT * FROM users WHERE email = ? AND password = ?
+            SELECT * FROM `users` WHERE `email` = ? AND `password` = ?
         ");
         $stmt->execute([$email, $password]);
         $user = $stmt->fetch();
@@ -19,7 +20,7 @@
 
             header('Location: index.php');
         } else {
-            echo "<script>alert('Incorrect Credentials');</script>";
+            echo "<script>alert('Incorrect Credentials.');</script>";
         }
     }
  ?>
@@ -43,12 +44,12 @@
     <body class="hold-transition login-page">
         <div class="login-box">
             <div class="login-logo">
-                <a href="#"><b>Admin Panel</b></a>
+                <a href="#"><b>Blog</b></a>
             </div>
             <div class="card">
                 <div class="card-body login-card-body">
                     <p class="login-box-msg">Sign in to start your session</p>
-                    <form action="login.php" method="post">
+                    <form action="" method="post">
                         <div class="input-group mb-3">
                             <input type="email" name="email" class="form-control" placeholder="Email">
                             <div class="input-group-append">
@@ -66,14 +67,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4">
-                                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <a type="button" href="register.php" class="btn btn-light btn-block">Register</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
 
         <!-- REQUIRED SCRIPTS -->
         <!-- jQuery -->

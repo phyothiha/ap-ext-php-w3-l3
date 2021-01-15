@@ -1,25 +1,30 @@
 <?php 
     session_start();
-    require '../config.php'; 
+    require 'config.php'; 
 
     if ($_POST) {
+        $name = $_POST['name'];
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        $stmt = $pdo->prepare("
-            SELECT * FROM users WHERE email = ? AND password = ?
+        $check_user_stmt = $pdo->prepare("
+            SELECT * FROM `users` WHERE `email` = ?
         ");
-        $stmt->execute([$email, $password]);
-        $user = $stmt->fetch();
+        $check_user_stmt->execute([$email]);
+        $user_exists = $check_user_stmt->fetch();
 
-        if ($user) {
-            $_SESSION['user_id'] = $user->id;
-            $_SESSION['username'] = $user->name;
-            $_SESSION['logged_in'] = time();
-
-            header('Location: index.php');
+        if ($user_exists) {
+            echo "<script>alert('Email is already exists.');</script>";
         } else {
-            echo "<script>alert('Incorrect Credentials');</script>";
+            $stmt = $pdo->prepare("
+                INSERT INTO `users`(`name`, `email`, `password`)
+                VALUES (?, ?, ?)
+            ");
+            $result = $stmt->execute([$name, $email, $password]);
+
+            if ($result) {
+                echo "<script>alert('Successfully Register. You can now login.'); window.location.href='login.php';</script>";
+            }
         }
     }
  ?>
@@ -38,17 +43,24 @@
         <!-- Theme style -->
         <link rel="stylesheet" href="/dist/css/adminlte.min.css">
         <!-- Google Font: Source Sans Pro -->
-        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     </head>
     <body class="hold-transition login-page">
         <div class="login-box">
             <div class="login-logo">
-                <a href="#"><b>Admin Panel</b></a>
+                <a href="#"><b>Blog</b></a>
             </div>
             <div class="card">
                 <div class="card-body login-card-body">
-                    <p class="login-box-msg">Sign in to start your session</p>
-                    <form action="login.php" method="post">
+                    <p class="login-box-msg">User Registration</p>
+                    <form action="" method="post">
+                        <div class="input-group mb-3">
+                            <input type="text" name="name" class="form-control" placeholder="Name">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user"></span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="input-group mb-3">
                             <input type="email" name="email" class="form-control" placeholder="Email">
                             <div class="input-group-append">
@@ -66,14 +78,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4">
-                                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <a type="button" href="login.php" class="btn btn-light btn-block">Log In</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
 
         <!-- REQUIRED SCRIPTS -->
         <!-- jQuery -->
