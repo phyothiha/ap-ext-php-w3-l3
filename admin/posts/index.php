@@ -1,10 +1,7 @@
 <?php  
     session_start();
-    require '../../config.php';
-
-    if ( (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) || $_SESSION['role'] != 1 ) {
-        header('Location: /admin/login.php');
-    }
+    require '../../autoload.php';
+    require 'logic/store.php';
 
     // pagination start
     if (isset($_GET['page'])) {
@@ -95,9 +92,9 @@
                                 <?php if ($posts) : foreach ($posts as $index => $post) : ?>
                                     <tr>
                                         <td><?php echo $index + 1 + $offset; ?></td>
-                                        <td><?php echo $post->title; ?></td>
+                                        <td><?php echo e($post->title); ?></td>
                                         <td>
-                                            <?php echo substr($post->content, 0, 50); ?>
+                                            <?php echo e(substr($post->content, 0, 50)); ?>
                                         </td>
                                         <td>
                                             <img src="../../images/<?php echo $post->image; ?>" alt="No Featured Image" width="150">
@@ -106,7 +103,12 @@
                                             <div class="btn-group">
                                                 <a href="../../blogdetail.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-primary mr-2"><i class="fa fa-eye"></i></a>
                                                 <a href="edit.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-info mr-2"><i class="fa fa-edit"></i></a>
-                                                <a onclick="return confirm('Are you sure you want to delete this item');" href="delete.php?id=<?php echo $post->id; ?>" class="btn rounded-0 btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
+                                                <form role="form" action="" method="POST">
+                                                    <?php method('DELETE'); ?>
+                                                    <?php csrf(); ?>
+                                                    <input type="hidden" name="id" value="<?php echo $post->id; ?>">
+                                                    <button onclick="return confirm('Are you sure you want to delete this item');" type="submit" class="btn rounded-0 btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

@@ -1,52 +1,7 @@
 <?php  
     session_start();
-    require '../../config.php';
-
-    if ( (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) || $_SESSION['role'] != 1 ) {
-        header('Location: /admin/login.php');
-    }
-
-    if ($_POST) {
-        $title = $_POST['title'];
-        $content = $_POST['content'];
-        $author_id = $_SESSION['user_id'];
-
-        if ($_FILES['image']['name']) {
-            $image = $_FILES['image']['name'];
-
-            $file =  '../../images/' . $image;
-            $image_type = pathinfo($file, PATHINFO_EXTENSION);
-
-            $image_ext_type = ['jpeg', 'jpg', 'png'];
-
-            if (! in_array($image_type, $image_ext_type) ) {
-                echo "<script>alert('Image must be jpeg, jpg or png');</script>";
-            } else {
-                move_uploaded_file($_FILES['image']['tmp_name'], $file);
-
-                $stmt = $pdo->prepare("
-                    INSERT INTO posts(title, content, image, author_id)
-                    VALUES (?, ?, ?, ?)
-                ");
-                $result = $stmt->execute([$title, $content, $image, $author_id]);
-
-                if ($result) {
-                    echo "<script>alert('Successfully Added'); window.location.href='../index.php';</script>";
-                }
-            }
-        }
-        else {
-            $stmt = $pdo->prepare("
-                INSERT INTO posts(title, content, author_id)
-                VALUES (?, ?, ?)
-            ");
-            $result = $stmt->execute([$title, $content, $author_id]);
-
-            if ($result) {
-                echo "<script>alert('Successfully Added'); window.location.href='../index.php';</script>";
-            }
-        }
-    } 
+    require '../../autoload.php';
+    require 'logic/store.php';
 ?>
 
 <?php include '../../partials/header.php'; ?>
@@ -61,26 +16,39 @@
                             <h3 class="card-title">Add New Blog Post</h3>
                         </div>
                         <form role="form" action="" method="POST" enctype="multipart/form-data">
+                            <?php csrf(); ?>
+
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="title">Title</label>
-                                    <input type="text" name="title" class="form-control" id="title" >
+                                    <input type="text" name="title" class="form-control <?php echo isset($_SESSION['errorMessageBag']['title']) ? 'is-invalid' : ''; ?>" id="title" value="<?php old_input_value('title'); ?>">
+
+                                    <?php if ( isset($_SESSION['errorMessageBag']['title']) ): ?>
+                                        <div class="invalid-feedback"><?php echo $_SESSION['errorMessageBag']['title']; ?></div>
+                                    <?php endif ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="content">Content</label>
-                                    <textarea class="form-control" id="content" name="content" rows="6" ></textarea>
+                                    <textarea class="form-control <?php echo isset($_SESSION['errorMessageBag']['content']) ? 'is-invalid' : ''; ?>" id="content" name="content" rows="6" ><?php old_input_value('content'); ?></textarea>
+
+                                    <?php if ( isset($_SESSION['errorMessageBag']['content']) ): ?>
+                                        <div class="invalid-feedback"><?php echo $_SESSION['errorMessageBag']['content']; ?></div>
+                                    <?php endif ?>
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputFile">Featured Image</label>
+                                    <label for="featured_image">Featured Image</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile" name="image">
-                                            <label class="custom-file-label" for="exampleInputFile">Upload Featured Image</label>
+                                            <input type="file" class="custom-file-input <?php echo isset($_SESSION['errorMessageBag']['featured_image']) ? 'is-invalid' : ''; ?>" id="featured_image" name="featured_image">
+                                            <label class="custom-file-label" for="featured_image">Upload Featured Image</label>
                                         </div>
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="">Upload</span>
                                         </div>
                                     </div>
+                                    <?php if ( isset($_SESSION['errorMessageBag']['featured_image']) ): ?>
+                                        <div class="invalid-feedback d-block"><?php echo $_SESSION['errorMessageBag']['featured_image']; ?></div>
+                                    <?php endif ?>
                                 </div>
                             </div>
                             <!-- /.card-body -->

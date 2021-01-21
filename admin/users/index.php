@@ -1,10 +1,7 @@
 <?php  
     session_start();
-    require '../../config.php';
-
-    if ( (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) || $_SESSION['role'] != 1 ) {
-        header('Location: /admin/login.php');
-    }
+    require '../../autoload.php';
+    require 'logic/store.php';
 
     // pagination start
     if (isset($_GET['page'])) {
@@ -95,9 +92,9 @@
                                 <?php if ($users) : foreach ($users as $index => $user) : ?>
                                     <tr>
                                         <td><?php echo $index + 1 + $offset; ?></td>
-                                        <td><?php echo $user->name; ?></td>
+                                        <td><?php echo e($user->name); ?></td>
                                         <td>
-                                            <?php echo $user->email; ?>
+                                            <?php echo e($user->email); ?>
                                         </td>
                                         <td>
                                             <?php echo ($user->role) ? 'Admin' : 'User'; ?>
@@ -105,7 +102,14 @@
                                         <td>
                                             <div class="btn-group">
                                                 <a href="edit.php?id=<?php echo $user->id; ?>" class="btn rounded-0 btn-sm btn-outline-info mr-2"><i class="fa fa-edit"></i></a>
-                                                <a onclick="return confirm('Are you sure you want to delete this item');" href="delete.php?id=<?php echo $user->id; ?>" class="btn rounded-0 btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
+                                                <?php if ($_SESSION['user_id'] != $user->id): ?>
+                                                    <form role="form" action="" method="POST">
+                                                        <?php method('DELETE'); ?>
+                                                        <?php csrf(); ?>
+                                                        <input type="hidden" name="id" value="<?php echo $user->id; ?>">
+                                                        <button onclick="return confirm('Are you sure you want to delete this item');" type="submit" class="btn rounded-0 btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                                    </form>
+                                                <?php endif ?>
                                             </div>
                                         </td>
                                     </tr>
