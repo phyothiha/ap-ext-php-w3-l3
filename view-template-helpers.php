@@ -69,3 +69,22 @@ if (! function_exists('not_found')) {
         ';
     }
 }
+
+if (! function_exists("get_template_part")) {
+
+    /**
+     * Loads a template part into a template.
+     * @param  string       $slug    The slug name for the generic template.
+     * @param  string|null  $name    The name of the specialised template.
+     * @param  array        $args    Additional arguments passed to the template. 
+     * @return void|false            Void on success, false if the template does not exist.
+     */
+    function get_template_part( string $slug, string $name = null, array $args = array() )
+    {
+        if (empty($name)) {
+            include "{$slug}.php";
+        } else {
+            include "{$slug}-{$name}.php";
+        }
+    }
+}

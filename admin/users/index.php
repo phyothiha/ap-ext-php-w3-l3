@@ -1,5 +1,6 @@
 <?php  
     require '../../bootstrap.php';
+    require 'logic/store.php';
 
     // pagination start
     if (isset($_GET['page'])) {

@@ -1,5 +1,5 @@
 <?php 
-    include 'bootstrap.php';
+    require 'bootstrap.php';
     require 'src/Validate.php';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {

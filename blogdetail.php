@@ -1,5 +1,5 @@
 <?php 
-    include 'bootstrap.php';
+    require 'bootstrap.php';
 
     if ($_GET) {
         $id = $_GET['id'];

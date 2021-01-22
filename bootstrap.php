@@ -8,6 +8,20 @@ require 'view-template-helpers.php';
 
 $REQUEST_URI = str_replace('.php', '', $_SERVER["REQUEST_URI"]);
 
+if ( empty($_SESSION['_token']) ) {
+    generate_token();
+}
+
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+    
+    if (! hash_equals( $_SESSION['_token'], $_POST['_token']) ) {
+        get_template_part( 'partials/errors/419' );
+        die();
+    } else {
+        generate_token();
+    }
+} 
+
 if ( isset($_SESSION['user_id']) && ( $REQUEST_URI == '/login' || $REQUEST_URI == '/register' || $REQUEST_URI == '/admin/login' ) ) {
     header('Location: /');
     exit;

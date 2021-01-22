@@ -1,5 +1,5 @@
 <?php 
-    include 'bootstrap.php';
+    require 'bootstrap.php';
 
     // pagination start
     if (isset($_GET['page'])) {
