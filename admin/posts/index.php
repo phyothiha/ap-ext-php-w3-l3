@@ -1,7 +1,5 @@
 <?php  
-    session_start();
-    require '../../autoload.php';
-    require 'logic/store.php';
+    require '../../bootstrap.php';
 
     // pagination start
     if (isset($_GET['page'])) {
@@ -16,8 +14,8 @@
     $offset = ($page - 1) * $per_page;
     // pagination end
    
-    if (isset($_POST['search']) || isset($_COOKIE['search'])) {
-        $search_query = $_POST['search'] ?? $_COOKIE['search'];
+    if (isset($_GET['search']) || isset($_COOKIE['search'])) {
+        $search_query = $_GET['search'] ?? $_COOKIE['search'];
 
         setcookie('search', $search_query, 0, "/admin");
 
@@ -62,7 +60,9 @@
     }
 ?>
 
-<?php include '../../partials/header.php'; ?>
+<?php get_header( null, [
+    'body_classes' => 'sidebar-mini'
+]); ?>
 
     <div class="content">
         <div class="container-fluid">
@@ -97,7 +97,7 @@
                                             <?php echo e(substr($post->content, 0, 50)); ?>
                                         </td>
                                         <td>
-                                            <img src="../../images/<?php echo $post->image; ?>" alt="No Featured Image" width="150">
+                                            <img src="<?php echo e( image_asset_url($post->image) ); ?>" alt="No Featured Image" width="150">
                                         </td>
                                         <td>
                                             <div class="btn-group">
@@ -159,4 +159,4 @@
         </div>
     </div>
 
-<?php include '../../partials/footer.php'; ?>
+<?php get_footer(); ?>

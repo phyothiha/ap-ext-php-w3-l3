@@ -1,9 +1,5 @@
 <?php
 
-if ( ( empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) ) || $_SESSION['role'] != 1 ) {
-    header('Location: /admin/login.php');
-}
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = isset( $_POST['id'] ) ? $_POST['id'] : '';
 
@@ -44,8 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     UPDATE `posts` SET `title` = ?, `content` = ?, `image` = ?, `author_id` = ? WHERE `id` = ?
                 ");
                 $result = $stmt->execute([$title, $content, $image, $author_id, $id]);
-
-                echo "<script>alert('Successfully Updated'); window.location.href='/admin/posts/index.php';</script>";
 
                 if ($result) {
                     echo "<script>alert('Successfully Updated'); window.location.href='/admin/posts/index.php';</script>";

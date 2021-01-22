@@ -1,10 +1,12 @@
 <?php  
-    session_start();
-    require '../../autoload.php';
+    include '../../bootstrap.php';
+    require '../../src/Validate.php';
     require 'logic/store.php';
 ?>
 
-<?php include '../../partials/header.php'; ?>
+<?php get_header( null, [
+    'body_classes' => 'sidebar-mini'
+]); ?>
 
     <div class="content">
         <div class="container-fluid">
@@ -21,27 +23,28 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" name="name" class="form-control <?php echo isset($_SESSION['errorMessageBag']['name']) ? 'is-invalid' : ''; ?>" id="name" value="<?php old_input_value('name'); ?>">
+                                    <input type="text" name="name" class="form-control <?php echo error('name') ? 'is-invalid' : ''; ?>" id="name" value="<?php echo e( old('name') ); ?>">
 
-                                    <?php if ( isset($_SESSION['errorMessageBag']['name']) ): ?>
-                                        <div class="invalid-feedback"><?php echo $_SESSION['errorMessageBag']['name']; ?></div>
+                                    <?php if ( error('name') ): ?>
+                                        <div class="invalid-feedback"><?php echo e( error('name') ); ?></div>
                                     <?php endif ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" name="email" class="form-control <?php echo isset($_SESSION['errorMessageBag']['email']) ? 'is-invalid' : ''; ?>" id="email" value="<?php old_input_value('email'); ?>">
+                                    <input type="email" name="email" class="form-control <?php echo error('email') ? 'is-invalid' : ''; ?>" id="email" value="<?php echo e( old('email') ); ?>">
 
-                                    <?php if ( isset($_SESSION['errorMessageBag']['email']) ): ?>
-                                        <div class="invalid-feedback"><?php echo $_SESSION['errorMessageBag']['email']; ?></div>
+                                    <?php if ( error('email') ): ?>
+                                        <div class="invalid-feedback"><?php echo e( error('email') ); ?></div>
                                     <?php endif ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Password</label>
-                                    <input type="password" name="password" class="form-control <?php echo isset($_SESSION['errorMessageBag']['password']) ? 'is-invalid' : ''; ?>" id="password">
+                                    <input type="password" name="password" class="form-control <?php echo error('password') ? 'is-invalid' : ''; ?>" id="password">
 
-                                    <?php if ( isset($_SESSION['errorMessageBag']['password']) ): ?>
-                                        <div class="invalid-feedback"><?php echo $_SESSION['errorMessageBag']['password']; ?></div>
+                                    <?php if ( error('password') ): ?>
+                                        <div class="invalid-feedback"><?php echo e( error('password') ); ?></div>
                                     <?php endif ?>
+
                                 </div>
                                 <div class="form-group form-check">
                                     <input type="checkbox" class="form-check-input" id="role" name="role">
@@ -61,4 +64,4 @@
         </div><!-- /.container-fluid -->
     </div>
 
-<?php include '../../partials/footer.php'; ?>
+<?php get_footer(); ?>

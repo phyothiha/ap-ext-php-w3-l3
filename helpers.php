@@ -1,23 +1,54 @@
 <?php
 
-if (! function_exists('old_input_value')) {
-    function old_input_value($value, $default = '')
+if (! function_exists('image_asset_url')) {
+    function image_asset_url($url)
     {
-        echo e( $_SESSION['oldInputValues'][$value] ?? $default );
+        return '/public/images/' . $url;
     }
 }
-// {{ old('title', $post->title) }}
+
+if (! function_exists('old')) {
+    function old(string $value, string $default = '')
+    {
+        return $_SESSION['oldInputValues'][$value] ?? $default;
+    }
+}
+
+if (! function_exists('error')) {
+    function error(string $value)
+    {
+        return isset( $_SESSION['errorMessageBag'][$value] ) 
+                ? $_SESSION['errorMessageBag'][$value] 
+                : false;
+    }
+}
+
+if (! function_exists('is_current_uri')) {
+    function is_current_uri( string $uri ) 
+    {
+        $path = $_SERVER['REQUEST_URI'];
+        $position = strpos($path, '?');
+        $trim_path = str_replace('.php', '', $path);
+
+        if ( 
+            $trim_path == $uri || ( $position && ( str_replace('.php', '', substr($path, 0, $position )) == $uri ) ) 
+        ) {
+            return true;
+        }
+    }
+}
+
 if (! function_exists('e')) {
-    function e($value)
+    function e(string $value)
     {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 }
 
 if (! function_exists('method')) {
-    function method($spoof_method)
+    function method(string $method)
     {
-        echo "<input type='hidden' name='_method' value='$spoof_method'>";
+        echo "<input type='hidden' name='_method' value='{$method}'>";
     }
 }
 
@@ -26,7 +57,7 @@ if (! function_exists('csrf')) {
     {
         $token = 'zx#rkesfk';
 
-        echo "<input type='hidden' name='_token' value='$token'>";
+        echo "<input type='hidden' name='_token' value='{$token}'>";
     }
 }
 

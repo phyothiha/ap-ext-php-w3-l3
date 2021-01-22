@@ -1,6 +1,6 @@
 <?php  
-    session_start();
-    require '../../autoload.php';
+    include '../../bootstrap.php';
+    require '../../src/Validate.php';
     require 'logic/store.php';
 
     $stmt = $pdo->prepare("
@@ -11,7 +11,9 @@
     $post = $stmt->fetch();
 ?>
 
-<?php include '../../partials/header.php'; ?>
+<?php get_header( null, [
+    'body_classes' => 'sidebar-mini'
+]); ?>
     
     <?php if (! empty($post)): ?>
     <div class="content">
@@ -34,38 +36,39 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="title">Title</label>
-                                    <input type="text" name="title" class="form-control <?php echo isset($_SESSION['errorMessageBag']['title']) ? 'is-invalid' : ''; ?>" id="title" value="<?php old_input_value('title', $post->title); ?>">
-                                    
-                                    <?php if ( isset($_SESSION['errorMessageBag']['title']) ): ?>
-                                        <div class="invalid-feedback"><?php echo $_SESSION['errorMessageBag']['title']; ?></div>
+                                    <input type="text" name="title" class="form-control <?php echo error('title') ? 'is-invalid' : ''; ?>" id="title" value="<?php echo e( old('title', $post->title) ); ?>">
+
+                                    <?php if ( error('title') ): ?>
+                                        <div class="invalid-feedback"><?php echo e( error('title') ); ?></div>
                                     <?php endif ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="content">Content</label>
-                                    <textarea class="form-control <?php echo isset($_SESSION['errorMessageBag']['content']) ? 'is-invalid' : ''; ?>" id="content" name="content" rows="6"><?php old_input_value('content', $post->content); ?></textarea>
+                                    <textarea class="form-control <?php echo error('content') ? 'is-invalid' : ''; ?>" id="content" name="content" rows="6" ><?php echo e( old('content', $post->content) ); ?></textarea>
 
-                                    <?php if ( isset($_SESSION['errorMessageBag']['content']) ): ?>
-                                        <div class="invalid-feedback"><?php echo $_SESSION['errorMessageBag']['content']; ?></div>
+                                    <?php if ( error('content') ): ?>
+                                        <div class="invalid-feedback"><?php echo e( error('content') ); ?></div>
                                     <?php endif ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="featured_image">Featured Image</label>
-                                    <div class="input-group">
+                                    <div class="input-group mb-2">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input <?php echo isset($_SESSION['errorMessageBag']['featured_image']) ? 'is-invalid' : ''; ?>" id="featured_image" name="featured_image">
+                                            <input type="file" class="custom-file-input <?php echo error('featured_image') ? 'is-invalid' : ''; ?>" id="featured_image" name="featured_image">
                                             <label class="custom-file-label" for="featured_image">Upload Featured Image</label>
                                         </div>
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="">Upload</span>
                                         </div>
                                     </div>
-                                    <?php if ( isset($_SESSION['errorMessageBag']['featured_image']) ): ?>
-                                        <div class="invalid-feedback d-block"><?php echo $_SESSION['errorMessageBag']['featured_image']; ?></div>
+                                    
+                                    <?php if ( error('featured_image') ): ?>
+                                        <div class="invalid-feedback d-block"><?php echo e( error('featured_image') ); ?></div>
                                     <?php endif ?>
 
                                     <?php if ($post->image) : ?>
                                     <div>
-                                        <img src="<?php echo '../../images/' . $post->image; ?>" width="150" class="mt-2 mb-1">
+                                        <img src="<?php echo e( image_asset_url($post->image) ); ?>" width="150" class="mt-2 mb-1">
                                         <p><?php echo $post->image; ?></p>
                                     </div>
                                     <?php endif; ?>
@@ -84,8 +87,8 @@
         </div><!-- /.container-fluid -->
     </div>
     <?php else: ?>
-        <?php not_found_template(); ?>
+        <?php not_found(); ?>
     <?php endif; ?>
     
 
-<?php include '../../partials/footer.php'; ?>
+<?php get_footer(); ?>

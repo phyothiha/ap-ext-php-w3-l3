@@ -1,6 +1,6 @@
 <?php 
-    session_start();
-    require 'autoload.php';
+    include 'bootstrap.php';
+    require 'src/Validate.php';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $validate->field([
@@ -13,16 +13,15 @@
             $name = $_POST['name'];
             $email = $_POST['email'];
             $password = $_POST['password'];
-            $role = 0;
 
             // encrypt password
             $password = password_hash($password, PASSWORD_DEFAULT);
 
             $stmt = $pdo->prepare("
-                INSERT INTO `users`(`name`, `email`, `password`, `role`)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO `users`(`name`, `email`, `password`)
+                VALUES (?, ?, ?)
             ");
-            $result = $stmt->execute([$name, $email, $password, $role]);
+            $result = $stmt->execute([$name, $email, $password]);
 
             if ($result) {
                 echo "<script>alert('Successfully Register. You can now login.'); window.location.href='/login.php';</script>";
@@ -33,91 +32,72 @@
     }
  ?>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Blog</title>
-        <!-- Font Awesome Icons -->
-        <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
-        <!-- icheck bootstrap -->
-        <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-        <!-- Theme style -->
-        <link rel="stylesheet" href="/dist/css/adminlte.min.css">
-        <!-- Google Font: Source Sans Pro -->
-        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    </head>
-    <body class="hold-transition login-page">
-        <div class="login-box">
-            <div class="login-logo">
-                <a href="#"><b>Blog</b></a>
-            </div>
-            <div class="card">
-                <div class="card-body login-card-body">
-                    <p class="login-box-msg">User Registration</p>
-                    <form action="" method="post">
-                        <!--  -->
-                        
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <input type="text" name="name" class="form-control <?php echo isset($_SESSION['errorMessageBag']['name']) ? 'is-invalid' : ''; ?>" placeholder="Name"  value="<?php old_input_value('name'); ?>">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-user"></span>
-                                    </div>
+<?php get_header( null, [
+    'body_classes' => 'login-page'
+]); ?>
+
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="#"><b>Blog</b></a>
+        </div>
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">User Registration</p>
+                <form action="" method="post">
+                    <?php csrf(); ?>
+                    
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input type="text" name="name" class="form-control <?php echo error('name') ? 'is-invalid' : ''; ?>" placeholder="Name"  value="<?php echo e( old('name') ); ?>">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user"></span>
                                 </div>
                             </div>
-
-                            <?php if ( isset($_SESSION['errorMessageBag']['name']) ): ?>
-                                <div class="invalid-feedback d-block"><?php echo $_SESSION['errorMessageBag']['name']; ?></div>
-                            <?php endif ?>
                         </div>
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <input type="email" name="email" class="form-control <?php echo isset($_SESSION['errorMessageBag']['email']) ? 'is-invalid' : ''; ?>" placeholder="Email"  value="<?php old_input_value('email'); ?>">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-envelope"></span>
-                                    </div>
+
+                        <?php if ( error('name') ): ?>
+                            <div class="invalid-feedback d-block"><?php echo e( error('name') ) ; ?></div>
+                        <?php endif ?>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input type="email" name="email" class="form-control <?php echo error('email') ? 'is-invalid' : ''; ?>" placeholder="Email"  value="<?php echo e( old('email') ); ?>">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-envelope"></span>
                                 </div>
                             </div>
-
-                            <?php if ( isset($_SESSION['errorMessageBag']['email']) ): ?>
-                                <div class="invalid-feedback d-block"><?php echo $_SESSION['errorMessageBag']['email']; ?></div>
-                            <?php endif ?>
                         </div>
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <input type="password" name="password" class="form-control <?php echo isset($_SESSION['errorMessageBag']['password']) ? 'is-invalid' : ''; ?>" placeholder="Password">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-lock"></span>
-                                    </div>
+
+                        <?php if ( error('email') ): ?>
+                            <div class="invalid-feedback d-block"><?php echo e( error('email') ) ; ?></div>
+                        <?php endif ?>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control <?php echo isset($_SESSION['errorMessageBag']['password']) ? 'is-invalid' : ''; ?>" placeholder="Password">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
                                 </div>
                             </div>
+                        </div>
 
-                            <?php if ( isset($_SESSION['errorMessageBag']['password']) ): ?>
-                                <div class="invalid-feedback d-block"><?php echo $_SESSION['errorMessageBag']['password']; ?></div>
-                            <?php endif ?>
-                        </div>
-                        <div class="row">
-                            <button type="submit" class="btn btn-primary btn-block">Register</button>
-                            <a type="button" href="login.php" class="btn btn-light btn-block">Sign In</a>
-                        </div>
-                    </form>
-                </div>
+                        <?php if ( error('password') ): ?>
+                            <div class="invalid-feedback d-block"><?php echo e( error('password') ); ?></div>
+                        <?php endif ?>
+                    </div>
+
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        <a type="button" href="login.php" class="btn btn-light btn-block">Sign In</a>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-
-        <!-- REQUIRED SCRIPTS -->
-        <!-- jQuery -->
-        <script src="/plugins/jquery/jquery.min.js"></script>
-        <!-- Bootstrap 4 -->
-        <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- AdminLTE App -->
-        <script src="/dist/js/adminlte.min.js"></script>
-    </body>
-</html>
+<?php get_footer(); ?>

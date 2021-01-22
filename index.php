@@ -1,12 +1,5 @@
 <?php 
-    session_start();
-    require 'config.php';
-
-    if ( 
-        empty($_SESSION['user_id']) && empty($_SESSION['logged_in']) 
-    ) {
-        header('Location: login.php');
-    }
+    include 'bootstrap.php';
 
     // pagination start
     if (isset($_GET['page'])) {
@@ -38,7 +31,9 @@
     // query data end
  ?>
 
-<?php include 'partials/blog_header.php'; ?>
+<?php get_header( null, [
+    'body_classes' => 'sidebar-mini'
+]); ?>
 
 <div class="content">
     <div class="container">
@@ -48,10 +43,10 @@
             <div class="col-md-4">
                 <div class="card card-widget">
                     <div class="bg-transparent px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
-                        <div class="card-title text-center"><?php echo $post->title; ?></div>
+                        <div class="card-title text-center"><?php echo e( $post->title ); ?></div>
                     </div>
                     <div class="card-body" style="min-height: 260px;">
-                        <img class="img-fluid pad" src="images/<?php echo $post->image; ?>" alt="There is no featured photo.">
+                        <img class="img-fluid pad" src="<?php echo e( image_asset_url($post->image) ); ?>" alt="There is no featured photo.">
                     </div>
                     <div class="card-footer">
                         <a href="blogdetail.php?id=<?php echo $post->id; ?>" class="btn btn-sm btn-primary float-right">Read More</a>
@@ -97,8 +92,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
-<?php include 'partials/blog_footer.php'; ?>
+<?php get_footer(); ?>

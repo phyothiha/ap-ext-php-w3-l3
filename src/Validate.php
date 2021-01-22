@@ -113,10 +113,13 @@ class Validate
                                 break;
                             }
                         } else {
+                            $role = $options[2];
+                            $type = ($options[3] == 'user') ? 0 : 1;
+
                             $stmt = $this->pdo->prepare("
-                                SELECT * FROM $table WHERE $column = ?
+                                SELECT * FROM $table WHERE $column = ? AND $role = ?
                             ");
-                            $stmt->execute([ $_POST[$field] ]);
+                            $stmt->execute([ $_POST[$field], $type ]);
 
                             if (! $stmt->rowCount()) {
                                 $_SESSION['errorMessageBag'][$field] = "The $field does not exists.";
